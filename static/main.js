@@ -19,6 +19,8 @@ function KStart() {
       setting: ks.select(".action-btn.setting"),
     },
     main: {
+      group: ks.select(".s-type-list").children,
+      groupselect: ks.select(".hide-type-list").children,
       select: ks.select(".search-select"),
       search: ks.select(".search-selector"),
       input: ks.select(".input-box input"),
@@ -80,6 +82,7 @@ function KStart() {
         set: "center/cover no-repeat",
       }
     ],
+    group: [],
     search_method: [
       {
         name: "百度",
@@ -261,6 +264,21 @@ function KStart() {
     onBodyClick: (ev) => {
       ev.target.className !== "search-select" && obj.main.search.classList.remove("active");
     },
+    // 修改搜索组
+    selectGroup: () => {
+      const { group } = obj.main;
+      const { groupselect } = obj.main;
+      for (let i = 0; i < group.length; i++) {
+        group[i].onclick = function () {
+          for (let n = 0; n < group.length; n++) {
+            group[n].className = '';
+            groupselect[n].style.display = 'none';
+          }
+          this.className = 'active';
+          groupselect[i].style.display = 'block';
+        }
+      }
+    },
     // 搜索里面的按钮
     selectSearchButton: () => {
       const { search } = obj.main;
@@ -392,7 +410,6 @@ function KStart() {
 
       methods.setStorage();
     },
-
     // 修改搜索方式
     changeSearch: (key) => {
       data.user_set.search = key;
@@ -443,7 +460,7 @@ function KStart() {
       // prefers-reduced-motion 事件监听
       window.matchMedia("(prefers-reduced-motion: reduce)").addListener((e) => {
         // 当 data.user_set.low_animate 不为 0(自适应) 时，不进行处理
-        if(data.user_set.low_animate !== 0) return;
+        if (data.user_set.low_animate !== 0) return;
 
         if (e.matches) {
           document.body.classList.add("low-animate");
@@ -500,11 +517,11 @@ function KStart() {
     initBody: () => {
       // 全局委托，用于隐藏搜索下拉框
       document.body.onclick = modifys.onBodyClick;
-
+      //分组
+      modifys.selectGroup();
       // 搜索
       obj.main.select.onclick = modifys.selectSearchButton;
       obj.main.submit.onclick = modifys.submitSearchButton;
-
       data.search_method.forEach((item, key) => {
         const el = ks.create("div", {
           class: "item",
