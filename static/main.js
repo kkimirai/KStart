@@ -600,6 +600,7 @@ function KStart() {
 
         switch (obj.settings[item].type) {
           case "text": type = "value"; break;
+          case "text": type = "value"; break;
           case "checkbox": type = "checked"; break;
           case "select-one": type = "value"; break;
           // ! 暂时没有使用
