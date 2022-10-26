@@ -61,9 +61,96 @@ var search_method1 = [
     url: "https://www.sogou.com/web?query=%s",
   },
   {
-    name: "DuckDuckGo",
+    name: "F搜",
+    icon: "360so",
+    url: "https://fsoufsou.com/search?q=%s"
+  },
+  {
+    name: "Yandex",
     icon: "duckduckgo",
-    url: "https://duckduckgo.com/?q=%s",
+    url: "https://yandex.com/search/?text=%s",
+  },
+];
+var search_method2 = [
+  {
+    name: "开发者搜索",
+    icon: "baidu",
+    url: "https://kaifa.baidu.com/searchPage?wd=%s",
+  },
+  {
+    name: "goobe搜索",
+    icon: "google",
+    url: "https://goobe.io/search.aspx?k=%s",
+  },
+  {
+    name: "github",
+    icon: "duckduckgo",
+    url: "https://github.com/search?q=%s",
+  },
+  {
+    name: "CSDN如意",
+    icon: "360so",
+    url: "https://devbit.csdn.net/search?keyword=%s",
+  },
+  {
+    name: "极客搜索",
+    icon: "360so",
+    url: "https://s.geekbang.org/search/c=0/k=%s/t=",
+  },
+  {
+    name: "思否",
+    icon: "360so",
+    url: "https://segmentfault.com/search?q=%s",
+  }
+];
+var search_method3 = [
+  {
+    name: "知网",
+    icon: "cnki",
+    url: "https://scholar.cnki.net/home/search?sw=1&sw-input=%s",
+  },
+  {
+    name: "微软学术",
+    icon: "weixin",
+    url: "https://www.bing.com/academic/search?q=%s",
+  },
+  {
+    name: "谷歌学术",
+    icon: "google",
+    url: "https://scholar.google.com.hk/scholar?hl=%s",
+  }, {
+    name: "semantics",
+    icon: "google",
+    url: "https://www.semanticscholar.org/search?q=%s",
+  },
+];
+var search_method4 = [
+  {
+    name: "知乎",
+    icon: "360so",
+    url: "https://www.zhihu.com/search?type=content&q=%s",
+  },
+  {
+    name: "微信",
+    icon: "360so",
+    url: "https://weixin.sogou.com/weixin?type=2&query=%s",
+  },
+  {
+    name: "微博",
+    icon: "360so",
+    url: "https://s.weibo.com/weibo?q=%s",
+  },
+];
+var search_method5 = [
+  {
+    name: "茶杯狐",
+    icon: "duckduckgo",
+    url: "https://www.cupfox.com/search?key=%s",
+  },
+  {
+    name: "千帆网盘",
+    icon: "360so",
+    url: "https://pan.qianfan.app/search/?pan=all&q=%s",
   },
 ];
 function KStart() {
@@ -120,9 +207,13 @@ function KStart() {
     window: 0,
     sites: [],
     background_type: background_type,
-    search_group: [{
-      search: search_method1,
-    }],
+    search_group: [
+      search_method1,
+      search_method2,
+      search_method3,
+      search_method4,
+      search_method5,
+    ],
     search_method: search_method1,
     motion_reduced_enum: [
       {
@@ -285,7 +376,7 @@ function KStart() {
     },
     submitSearchButton: (e) => {
       e.preventDefault();
-      window.open(data.search_method[data.user_set.search].url.replace("%s", obj.main.input.value));
+      window.open(data.search_group[data.user_set.group][data.user_set.search].url.replace("%s", obj.main.input.value));
     },
 
     // 右上方的按钮
@@ -410,10 +501,10 @@ function KStart() {
     },
     // 修改搜索方式
     changeSearch: (key, g) => {
+      let search_method = data.search_group[g]
       data.user_set.search = key;
-
-      if (data.search_method[key].icon) {
-        obj.main.select[g].innerHTML = `<i class="iconfont icon-${data.search_method[key].icon}"></i>`
+      if (search_method[key].icon) {
+        obj.main.select[g].innerHTML = `<i class="iconfont icon-${search_method[key].icon}"></i>`
       }
     },
     // 初始化背景和深色背景模式检测
@@ -518,9 +609,9 @@ function KStart() {
       // 搜索
       obj.main.select[g].onclick = modifys.selectSearchButton;
       obj.main.submit.onclick = modifys.submitSearchButton;
-      for (let isearch_method of data.search_method) {
+      for (let isearch_method of data.search_group[g]) {
         let method_num = ks.select(obj.main.search[g]).childElementCount
-        if (method_num < (data.search_method.length)) {
+        if (method_num < (data.search_group[g].length)) {
           ks.create("div", {
             class: "item",
             html: `<i class="iconfont icon-${isearch_method.icon}"></i>${isearch_method.name}`,
@@ -599,7 +690,6 @@ function KStart() {
         let type, i = item;
 
         switch (obj.settings[item].type) {
-          case "text": type = "value"; break;
           case "text": type = "value"; break;
           case "checkbox": type = "checked"; break;
           case "select-one": type = "value"; break;
@@ -686,6 +776,7 @@ function KStart() {
     modifys.initBody(0);
     for (let i = 0; i < search_group.length; i++) {
       search_group[i].onclick = function () {
+        data.user_set.group = i;
         for (let n = 0; n < search_group.length; n++) {
           search_group[n].className = '';
           groupselect[n].style.display = 'none';
