@@ -41,6 +41,11 @@ var search_method1 = [
     url: "https://cn.bing.com/search?q=%s",
   },
   {
+    name: "mirrors",
+    icon: "google",
+    url: "https://google.mirrors.pw/search?q=%s",
+  },
+  {
     name: "谷歌",
     icon: "google",
     url: "https://www.google.com/search?q=%s",
@@ -130,6 +135,7 @@ function KStart() {
       },
     ],
     user_set: {
+      group: 0,
       search: 0,
       background: 0,
       auto_focus: false,
@@ -666,7 +672,6 @@ function KStart() {
         if (data.user_set.sites.includes(key)) {
           item.classList.add("active");
         }
-
         item.onclick = modifys.siteItemButton;
       });
     }
@@ -676,8 +681,6 @@ function KStart() {
   function primaryTab() {
     const { search_group } = obj.main;
     const { groupselect } = obj.main;
-    const { search } = obj.main;
-    const { select } = obj.main;
     modifys.initBody(0);
     for (let i = 0; i < search_group.length; i++) {
       search_group[i].onclick = function () {
@@ -700,7 +703,7 @@ function KStart() {
 
     // 读取在线或本地数据
     if (user) {
-      const url = `https://dreamer-paul.github.io/KStart-Sites/${user}.json`;
+      const url = `https://kkimirai.github.io/KStart-Sites/${user}.json`;
 
       console.warn("Web mode");
       data.env = "web";
@@ -728,7 +731,7 @@ function KStart() {
 
     data.user_set.auto_focus && modifys.focusSearchInput();
 
-    modifys.changeSearch(data.user_set.search);
+    modifys.changeSearch(data.user_set.search, data.user_set.group);
     modifys.initSettingForm();
     modifys.initDrawerItems();
   });
