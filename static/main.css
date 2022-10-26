@@ -663,3 +663,10 @@ body.low-animate .the-drawer.active {
   font-size: .875em;
   text-align: center;
 }
+
+/* hitokoto_text */
+#hitokoto_text {
+  text-align: center;
+  letter-spacing: 3px;
+  color: white;
+}

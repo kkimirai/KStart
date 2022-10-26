@@ -61,38 +61,6 @@ var search_method1 = [
     url: "https://duckduckgo.com/?q=%s",
   },
 ];
-var search_method2 = [
-  {
-    name: "百度",
-    icon: "baidu",
-    url: "https://www.baidu.com/s?wd=%s",
-  },
-  {
-    name: "必应",
-    icon: "bing",
-    url: "https://cn.bing.com/search?q=%s",
-  },
-  {
-    name: "谷歌",
-    icon: "google",
-    url: "https://www.google.com/search?q=%s",
-  },
-  {
-    name: "360",
-    icon: "360so",
-    url: "https://www.so.com/s?q=%s",
-  },
-  {
-    name: "搜狗",
-    icon: "sogou",
-    url: "https://www.sogou.com/web?query=%s",
-  },
-  {
-    name: "DuckDuckGo",
-    icon: "duckduckgo",
-    url: "https://duckduckgo.com/?q=%s",
-  },
-];
 function KStart() {
   const obj = {
     header: {
@@ -543,14 +511,29 @@ function KStart() {
       // 搜索
       obj.main.select[g].onclick = modifys.selectSearchButton;
       obj.main.submit.onclick = modifys.submitSearchButton;
-      data.search_method.forEach((item, key) => {
-        const el = ks.create("div", {
-          class: "item",
-          html: `<i class="iconfont icon-${item.icon}"></i>${item.name}`,
-          parent: obj.main.search[g]
-        });
-        el.onclick = () => modifys.changeSearch(key, g);
-      });
+      for (let isearch_method of data.search_method) {
+        let method_num = ks.select(obj.main.search[g]).childElementCount
+        if (method_num < (data.search_method.length)) {
+          ks.create("div", {
+            class: "item",
+            html: `<i class="iconfont icon-${isearch_method.icon}"></i>${isearch_method.name}`,
+            parent: obj.main.search[g]
+          });
+        }
+        ks.select(obj.main.search[g]).childNodes.forEach((item, key) => {
+          item.onclick = () => modifys.changeSearch(key, g);
+        })
+      }
+      // data.search_method.forEach((item, key) => {
+      //   const el = ks.create("div", {
+      //     class: "item",
+      //     html: `<i class="iconfont icon-${item.icon}"></i>${item.name}`,
+      //     parent: obj.main.search[g]
+      //   });
+      //   ;
+      //   console.log(el)
+      //   el.onclick = () => modifys.changeSearch(key, g);
+      // });
       // 打开按钮
       obj.header.edit.onclick = modifys.editButton;
       obj.header.updated.onclick = modifys.updatedButton;
@@ -695,6 +678,7 @@ function KStart() {
     const { groupselect } = obj.main;
     const { search } = obj.main;
     const { select } = obj.main;
+    modifys.initBody(0);
     for (let i = 0; i < search_group.length; i++) {
       search_group[i].onclick = function () {
         for (let n = 0; n < search_group.length; n++) {
