@@ -591,6 +591,10 @@ body.low-animate .the-window.closed {
   width: 6px;
 }
 
+.window-body .select {
+  background: var(--input-bg);
+}
+
 .the-drawer {
   top: 0;
   right: 0;

@@ -89,6 +89,7 @@ function KStart() {
       item: ks(".the-window, .the-drawer"),
     },
     settings: {
+      group: ks.select("[name=group]"),
       search: ks.select("[name=search]"),
       background: ks.select("[name=background]"),
       sites: ks.select("[name=sites]"),
