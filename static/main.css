@@ -361,6 +361,7 @@ main {
   cursor: pointer;
   padding: .5em 1em;
   transition: color .3s, background-color .3s;
+  text-align: left;
 }
 
 .search-selector .item:hover {

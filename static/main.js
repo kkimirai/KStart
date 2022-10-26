@@ -9,7 +9,90 @@
 本代码为奇趣保罗原创，并遵守 MIT 开源协议。欢迎访问我的博客：https://paugram.com
 
 ---- */
-
+var background_type = [
+  {
+    name: "无背景",
+  },
+  {
+    name: "随机动漫壁纸",
+    url: "https://api.paugram.com/wallpaper?source=gh",
+    set: "bottom right/60% no-repeat",
+  },
+  {
+    name: "必应每日壁纸",
+    url: "https://api.paugram.com/bing",
+    set: "center/cover no-repeat",
+  },
+  {
+    name: "Unsplash 随机图片",
+    url: "https://source.unsplash.com/random/1920x1080",
+    set: "center/cover no-repeat",
+  }
+];
+var search_method1 = [
+  {
+    name: "百度",
+    icon: "baidu",
+    url: "https://www.baidu.com/s?wd=%s",
+  },
+  {
+    name: "必应",
+    icon: "bing",
+    url: "https://cn.bing.com/search?q=%s",
+  },
+  {
+    name: "谷歌",
+    icon: "google",
+    url: "https://www.google.com/search?q=%s",
+  },
+  {
+    name: "360",
+    icon: "360so",
+    url: "https://www.so.com/s?q=%s",
+  },
+  {
+    name: "搜狗",
+    icon: "sogou",
+    url: "https://www.sogou.com/web?query=%s",
+  },
+  {
+    name: "DuckDuckGo",
+    icon: "duckduckgo",
+    url: "https://duckduckgo.com/?q=%s",
+  },
+];
+var search_method2 = [
+  {
+    name: "百度",
+    icon: "baidu",
+    url: "https://www.baidu.com/s?wd=%s",
+  },
+  {
+    name: "必应",
+    icon: "bing",
+    url: "https://cn.bing.com/search?q=%s",
+  },
+  {
+    name: "谷歌",
+    icon: "google",
+    url: "https://www.google.com/search?q=%s",
+  },
+  {
+    name: "360",
+    icon: "360so",
+    url: "https://www.so.com/s?q=%s",
+  },
+  {
+    name: "搜狗",
+    icon: "sogou",
+    url: "https://www.sogou.com/web?query=%s",
+  },
+  {
+    name: "DuckDuckGo",
+    icon: "duckduckgo",
+    url: "https://duckduckgo.com/?q=%s",
+  },
+];
 function KStart() {
   const obj = {
     header: {
@@ -19,10 +102,10 @@ function KStart() {
       setting: ks.select(".action-btn.setting"),
     },
     main: {
-      group: ks.select(".s-type-list").children,
+      search_group: ks.select(".s-type-list").children,
       groupselect: ks.select(".hide-type-list").children,
-      select: ks.select(".search-select"),
-      search: ks.select(".search-selector"),
+      select: ks.selectAll(".search-select"),
+      search: ks.selectAll(".search-selector"),
       input: ks.select(".input-box input"),
       submit: ks.select(".input-box .btn"),
       sites: ks.select(".navi-items"),
@@ -62,59 +145,11 @@ function KStart() {
     timer: "",
     window: 0,
     sites: [],
-    background_type: [
-      {
-        name: "无背景",
-      },
-      {
-        name: "随机动漫壁纸",
-        url: "https://api.paugram.com/wallpaper?source=gh",
-        set: "bottom right/60% no-repeat",
-      },
-      {
-        name: "必应每日壁纸",
-        url: "https://api.paugram.com/bing",
-        set: "center/cover no-repeat",
-      },
-      {
-        name: "Unsplash 随机图片",
-        url: "https://source.unsplash.com/random/1920x1080",
-        set: "center/cover no-repeat",
-      }
-    ],
-    group: [],
-    search_method: [
-      {
-        name: "百度",
-        icon: "baidu",
-        url: "https://www.baidu.com/s?wd=%s",
-      },
-      {
-        name: "必应",
-        icon: "bing",
-        url: "https://cn.bing.com/search?q=%s",
-      },
-      {
-        name: "谷歌",
-        icon: "google",
-        url: "https://www.google.com/search?q=%s",
-      },
-      {
-        name: "360",
-        icon: "360so",
-        url: "https://www.so.com/s?q=%s",
-      },
-      {
-        name: "搜狗",
-        icon: "sogou",
-        url: "https://www.sogou.com/web?query=%s",
-      },
-      {
-        name: "DuckDuckGo",
-        icon: "duckduckgo",
-        url: "https://duckduckgo.com/?q=%s",
-      },
-    ],
+    background_type: background_type,
+    search_group: [{
+      search: search_method1,
+    }],
+    search_method: search_method1,
     motion_reduced_enum: [
       {
         name: "自适应",
@@ -262,28 +297,16 @@ function KStart() {
   const modifys = {
     // 全局委托，用于隐藏搜索下拉框
     onBodyClick: (ev) => {
-      ev.target.className !== "search-select" && obj.main.search.classList.remove("active");
-    },
-    // 修改搜索组
-    selectGroup: () => {
-      const { group } = obj.main;
-      const { groupselect } = obj.main;
-      for (let i = 0; i < group.length; i++) {
-        group[i].onclick = function () {
-          for (let n = 0; n < group.length; n++) {
-            group[n].className = '';
-            groupselect[n].style.display = 'none';
-          }
-          this.className = 'active';
-          groupselect[i].style.display = 'block';
-        }
-      }
+      for (let search_windows of obj.main.search) {
+        ev.target.className !== "search-select" && search_windows.classList.remove("active")
+      };
     },
     // 搜索里面的按钮
     selectSearchButton: () => {
       const { search } = obj.main;
-
-      search.classList.toggle("active");
+      for (let isearch of search) {
+        isearch.classList.toggle("active");
+      }
     },
     submitSearchButton: (e) => {
       e.preventDefault();
@@ -411,11 +434,11 @@ function KStart() {
       methods.setStorage();
     },
     // 修改搜索方式
-    changeSearch: (key) => {
+    changeSearch: (key, g) => {
       data.user_set.search = key;
 
       if (data.search_method[key].icon) {
-        obj.main.select.innerHTML = `<i class="iconfont icon-${data.search_method[key].icon}"></i>`
+        obj.main.select[g].innerHTML = `<i class="iconfont icon-${data.search_method[key].icon}"></i>`
       }
     },
     // 初始化背景和深色背景模式检测
@@ -514,24 +537,20 @@ function KStart() {
     },
 
     // 初始化主体的元素（不受限于用户数据）
-    initBody: () => {
+    initBody: (g) => {
       // 全局委托，用于隐藏搜索下拉框
       document.body.onclick = modifys.onBodyClick;
-      //分组
-      modifys.selectGroup();
       // 搜索
-      obj.main.select.onclick = modifys.selectSearchButton;
+      obj.main.select[g].onclick = modifys.selectSearchButton;
       obj.main.submit.onclick = modifys.submitSearchButton;
       data.search_method.forEach((item, key) => {
         const el = ks.create("div", {
           class: "item",
           html: `<i class="iconfont icon-${item.icon}"></i>${item.name}`,
-          parent: obj.main.search
+          parent: obj.main.search[g]
         });
-
-        el.onclick = () => modifys.changeSearch(key);
+        el.onclick = () => modifys.changeSearch(key, g);
       });
-
       // 打开按钮
       obj.header.edit.onclick = modifys.editButton;
       obj.header.updated.onclick = modifys.updatedButton;
@@ -670,8 +689,25 @@ function KStart() {
     }
   };
 
-  modifys.initBody();
-
+  // 修改搜索组(传参到初始化DOM)
+  function primaryTab() {
+    const { search_group } = obj.main;
+    const { groupselect } = obj.main;
+    const { search } = obj.main;
+    const { select } = obj.main;
+    for (let i = 0; i < search_group.length; i++) {
+      search_group[i].onclick = function () {
+        for (let n = 0; n < search_group.length; n++) {
+          search_group[n].className = '';
+          groupselect[n].style.display = 'none';
+        }
+        this.className = 'active';
+        groupselect[i].style.display = 'block';
+        modifys.initBody(i);
+      }
+    }
+  }
+  primaryTab();
   // 初始化，先获取预设站点数据
   fetch("site.json").then((res) => res.json()).then((res) => {
     data.sites = res;
